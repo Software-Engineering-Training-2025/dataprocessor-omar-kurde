@@ -1,5 +1,12 @@
 package org.example.dataprocessor;
 
+import org.example.dataprocessor.AnalysisBackage.Analysis;
+import org.example.dataprocessor.CleanBackage.Clean;
+import org.example.dataprocessor.FactoriesAnalysis.AnalysisFactory;
+import org.example.dataprocessor.FactoriesClean.CleanFactory;
+import org.example.dataprocessor.FactoriesOutput.OutputFactory;
+import org.example.dataprocessor.OutputBackage.Output;
+import org.example.dataprocessor.PrePeocessHandler.PipelineStrategy;
 import org.example.dataprocessor.enums.AnalysisType;
 import org.example.dataprocessor.enums.CleaningType;
 import org.example.dataprocessor.enums.OutputType;
@@ -37,8 +44,16 @@ public class DataProcessorService {
         // 2) Analyze cleaned array according to analysisType.
         // 3) Output according to outputType (console or target/result.txt).
         // 4) Return the numeric result.
-
-        throw new UnsupportedOperationException("Student must implement process(...)");
+        try {
+            Clean clean = CleanFactory.getInstance(cleaningType);
+            Analysis analysis = AnalysisFactory.getInstance(analysisType);
+            Output output = OutputFactory.getInstance(outputType);
+            PipelineStrategy pipeline = new PipelineStrategy(clean, analysis, output);
+            return pipeline.GetInfo(new ArrayList<Number>(data));
+        }
+        catch (Exception e) {
+            throw new UnsupportedOperationException("Student must implement process(...)");
+        }
     }
 }
 
